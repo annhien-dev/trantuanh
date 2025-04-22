@@ -60,11 +60,19 @@ def display_quiz(unit_name, unit_data):
 
 # Hiển thị bài đọc và từ vựng liên quan
 def display_unit(unit_name, unit_data):
-    # Kiểm tra các cột của dữ liệu để tránh lỗi KeyError
-    st.write(unit_data.keys())  # In ra các tên sheet (units)
-    st.write(unit_data[unit_name].columns)  # In ra các cột của unit hiện tại
+    # Kiểm tra các sheet có trong unit_data (tên sheet sẽ là các unit)
+    st.write("Available Units:", unit_data.keys())  # In ra các tên sheet (units)
+    
+    # Kiểm tra xem unit_name có tồn tại trong unit_data không
+    if unit_name not in unit_data:
+        st.error(f"Unit '{unit_name}' not found. Available units are: {list(unit_data.keys())}")
+        return
 
+    # Kiểm tra dữ liệu của unit hiện tại
     unit_data_filtered = unit_data[unit_name]
+
+    # Kiểm tra các cột của unit_data_filtered
+    st.write(f"Columns of {unit_name}: {unit_data_filtered.columns}")
 
     if not unit_data_filtered.empty:
         # Hiển thị bài đọc dài
@@ -123,8 +131,8 @@ def main():
     selected_unit = st.sidebar.selectbox("Choose a Unit", units)
     
     # Hiển thị bài đọc và các từ vựng của unit được chọn
-    display_unit(selected_unit, unit_data[selected_unit])
-    
+    display_unit(selected_unit, unit_data)
+
     # Hiển thị câu hỏi trắc nghiệm của unit được chọn
     display_quiz(selected_unit, unit_data[selected_unit])
     
