@@ -38,37 +38,36 @@ def display_unit(unit_name, unit_data):
     if not unit_df.empty:
         st.title(f"📚 Unit: {unit_name}")
 
+        # Hiển thị bài đọc
         reading_text = unit_df['Reading Text'].iloc[0]
         if pd.notna(reading_text):
             st.subheader("📖 Reading Text:")
             st.write(reading_text)
 
-            # Phát âm từ file nếu có
+            # Phát âm bài đọc từ TTS
             st.subheader("🔊 Listen to the reading:")
-            audio_path = f"audio/{unit_name}.mp3"
-            if os.path.exists(audio_path):
-                st.audio(audio_path, format='audio/mp3')
-            else:
-                st.warning("⚠️ Audio file not found. Using TTS instead.")
-                audio_file = generate_audio(reading_text)
-                if audio_file:
-                    st.audio(audio_file, format='audio/mp3')
+            audio_file = generate_audio(reading_text)
+            if audio_file:
+                st.audio(audio_file, format='audio/mp3')
 
             st.write("---")
 
+        # Hiển thị từ vựng
         st.subheader("📘 Vocabulary:")
         for _, row in unit_df.iterrows():
-            if pd.isna(row['Question']):
+            if pd.isna(row['Question']):  # Chỉ hiển thị từ vựng (câu hỏi là NaN)
                 st.markdown(f"**{row['Vocabulary']}** ({row['IPA']})")
                 st.write(f"**Example**: {row['Example']}")
                 st.write(f"**Explanation**: {row['Explanation']}")
                 st.write(f"**Note**: {row['Note']}")
 
+                # Phát âm từ vựng qua TTS
                 st.markdown("🔊 **Pronunciation:**")
                 audio_file = generate_audio(row['Vocabulary'])
                 if audio_file:
                     st.audio(audio_file, format='audio/mp3')
 
+                # Phát âm câu ví dụ
                 st.markdown("🔊 **Example Audio:**")
                 audio_file = generate_audio(row['Example'])
                 if audio_file:
@@ -127,7 +126,7 @@ def display_quiz(unit_name, unit_df):
 
 # App chính
 def main():
-    st.title("🧒 English Learning App for Kids")
+    st.title("🧒 English Learning App for Nhím - Angel")
 
     unit_data = load_vocabulary_data()
     units = list(unit_data.keys())
