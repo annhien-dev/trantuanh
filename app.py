@@ -98,7 +98,7 @@ def display_quiz(unit_name, unit_df):
     question = question_row['Question']
     options = [question_row['Option 1'], question_row['Option 2'], question_row['Option 3']]
     correct_answer = question_row['Correct Answer']
-    explanation = question_row.iloc[-1]
+    explanation = question_row['Explanation']
 
     st.markdown(f"**❓ Question:** {question}")
     
