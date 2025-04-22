@@ -5,7 +5,7 @@ from gtts import gTTS
 from io import BytesIO
 
 # Đọc dữ liệu từ tất cả các sheet trong file Excel
-@st.cache
+@st.cache_data
 def load_vocabulary_data():
     # Đọc tất cả các sheet
     df = pd.read_excel('english_vocabulary.xlsx', sheet_name=None)  # sheet_name=None để đọc tất cả các sheet
@@ -60,7 +60,11 @@ def display_quiz(unit_name, unit_data):
 
 # Hiển thị bài đọc và từ vựng liên quan
 def display_unit(unit_name, unit_data):
-    unit_data_filtered = unit_data[unit_data['Unit'] == unit_name]
+    # Kiểm tra các cột của dữ liệu để tránh lỗi KeyError
+    st.write(unit_data.keys())  # In ra các tên sheet (units)
+    st.write(unit_data[unit_name].columns)  # In ra các cột của unit hiện tại
+
+    unit_data_filtered = unit_data[unit_name]
 
     if not unit_data_filtered.empty:
         # Hiển thị bài đọc dài
