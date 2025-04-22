@@ -10,7 +10,7 @@ def load_vocabulary_data():
     df = pd.read_excel('english_vocabulary.xlsx', sheet_name=None)
     return df
 
-# Tạo file âm thanh từ văn bản
+# Tạo file âm thanh từ văn bản (gTTS)
 def generate_audio(text):
     try:
         if not text or not isinstance(text, str) or text.strip() == "":
@@ -38,42 +38,48 @@ def display_unit(unit_name, unit_data):
     if not unit_df.empty:
         st.title(f"📚 Unit: {unit_name}")
 
-        # Hiển thị bài đọc
+        # Hiển thị bài đọc và phát âm nếu có file MP3
         reading_text = unit_df['Reading Text'].iloc[0]
         if pd.notna(reading_text):
             st.subheader("📖 Reading Text:")
             st.write(reading_text)
 
-            # Phát âm bài đọc từ TTS
+            # Phát âm bài đọc từ file MP3 nếu có
             st.subheader("🔊 Listen to the reading:")
-            audio_file = generate_audio(reading_text)
-            if audio_file:
-                st.audio(audio_file, format='audio/mp3')
+            audio_path = f"audio/{unit_name}.mp3"
+            if os.path.exists(audio_path):
+                st.audio(audio_path, format='audio/mp3')
+            else:
+                st.warning("⚠️ Audio file not found. Using TTS instead.")
+                audio_file = generate_audio(reading_text)
+                if audio_file:
+                    st.audio(audio_file, format='audio/mp3')
 
             st.write("---")
 
         # Hiển thị từ vựng
         st.subheader("📘 Vocabulary:")
-        for _, row in unit_df.iterrows():
-            if pd.isna(row['Question']):  # Chỉ hiển thị từ vựng (câu hỏi là NaN)
-                st.markdown(f"**{row['Vocabulary']}** ({row['IPA']})")
-                st.write(f"**Example**: {row['Example']}")
-                st.write(f"**Explanation**: {row['Explanation']}")
-                st.write(f"**Note**: {row['Note']}")
+        vocabulary_data = unit_df[unit_df['Question'].isna()]  # Lọc dữ liệu từ vựng (không có câu hỏi)
+        
+        for _, row in vocabulary_data.iterrows():
+            st.markdown(f"**{row['Vocabulary']}** ({row['IPA']})")
+            st.write(f"**Example**: {row['Example']}")
+            st.write(f"**Explanation**: {row['Explanation']}")
+            st.write(f"**Note**: {row['Note']}")
 
-                # Phát âm từ vựng qua TTS
-                st.markdown("🔊 **Pronunciation:**")
-                audio_file = generate_audio(row['Vocabulary'])
-                if audio_file:
-                    st.audio(audio_file, format='audio/mp3')
+            # Phát âm từ vựng qua TTS
+            st.markdown("🔊 **Pronunciation:**")
+            audio_file = generate_audio(row['Vocabulary'])
+            if audio_file:
+                st.audio(audio_file, format='audio/mp3')
 
-                # Phát âm câu ví dụ
-                st.markdown("🔊 **Example Audio:**")
-                audio_file = generate_audio(row['Example'])
-                if audio_file:
-                    st.audio(audio_file, format='audio/mp3')
+            # Phát âm câu ví dụ
+            st.markdown("🔊 **Example Audio:**")
+            audio_file = generate_audio(row['Example'])
+            if audio_file:
+                st.audio(audio_file, format='audio/mp3')
 
-                st.write("---")
+            st.write("---")
     else:
         st.error(f"Unit {unit_name} is empty!")
 
@@ -81,7 +87,7 @@ def display_unit(unit_name, unit_data):
 def display_quiz(unit_name, unit_df):
     st.subheader("🧠 Quiz Time!")
 
-    quiz_data = unit_df[unit_df['Question'].notna()]
+    quiz_data = unit_df[unit_df['Question'].notna()]  # Lọc dữ liệu câu hỏi
     if quiz_data.empty:
         st.info("No quiz questions found in this unit.")
         return
@@ -126,7 +132,7 @@ def display_quiz(unit_name, unit_df):
 
 # App chính
 def main():
-    st.title("🧒 English Learning App for Nhím - Angel")
+    st.title("🧒 English Learning App for Kids")
 
     unit_data = load_vocabulary_data()
     units = list(unit_data.keys())
