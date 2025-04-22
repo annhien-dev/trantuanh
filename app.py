@@ -4,13 +4,13 @@ import pandas as pd
 from gtts import gTTS
 from io import BytesIO
 
-# 📦 Đọc tất cả các sheet từ file Excel
+# Đọc dữ liệu từ tất cả các sheet trong file Excel
 @st.cache_data
 def load_vocabulary_data():
     df = pd.read_excel('english_vocabulary.xlsx', sheet_name=None)
     return df
 
-# 🔊 Tạo file audio từ văn bản
+# Tạo file âm thanh từ văn bản
 def generate_audio(text):
     tts = gTTS(text=text, lang='en')
     audio_file = BytesIO()
@@ -18,7 +18,7 @@ def generate_audio(text):
     audio_file.seek(0)
     return audio_file
 
-# 📘 Hiển thị bài đọc và từ vựng
+# Hiển thị bài đọc và từ vựng
 def display_unit(unit_name, unit_data):
     if unit_name not in unit_data:
         st.error(f"Unit '{unit_name}' not found.")
@@ -28,13 +28,12 @@ def display_unit(unit_name, unit_data):
     if not unit_df.empty:
         st.title(f"📚 Unit: {unit_name}")
 
-        # 📖 Hiển thị bài đọc
         reading_text = unit_df['Reading Text'].iloc[0]
         if pd.notna(reading_text):
             st.subheader("📖 Reading Text:")
             st.write(reading_text)
 
-            # 🎧 Phát audio từ file nếu có
+            # Phát audio từ file nếu có
             st.subheader("🔊 Listen to the reading:")
             audio_path = f"audio/{unit_name}.mp3"
             if os.path.exists(audio_path):
@@ -45,7 +44,6 @@ def display_unit(unit_name, unit_data):
 
             st.write("---")
 
-        # 📘 Hiển thị từ vựng
         st.subheader("📘 Vocabulary:")
         for _, row in unit_df.iterrows():
             if pd.isna(row['Question']):
@@ -54,7 +52,6 @@ def display_unit(unit_name, unit_data):
                 st.write(f"**Explanation**: {row['Explanation']}")
                 st.write(f"**Note**: {row['Note']}")
 
-                # 🔊 Phát âm từ và ví dụ
                 st.markdown("🔊 **Pronunciation:**")
                 st.audio(generate_audio(row['Vocabulary']), format='audio/mp3')
 
@@ -65,7 +62,7 @@ def display_unit(unit_name, unit_data):
     else:
         st.error(f"Unit {unit_name} is empty!")
 
-# 🧠 Hiển thị câu hỏi trắc nghiệm
+# Hiển thị câu hỏi trắc nghiệm
 def display_quiz(unit_name, unit_df):
     st.subheader("🧠 Quiz Time!")
 
@@ -74,18 +71,25 @@ def display_quiz(unit_name, unit_df):
         st.info("No quiz questions found in this unit.")
         return
 
+    # Tạo key duy nhất cho từng lần hiển thị câu hỏi
+    quiz_key = f"{unit_name}_quiz_counter"
+    if quiz_key not in st.session_state:
+        st.session_state[quiz_key] = 0
+
+    # Lấy 1 câu hỏi ngẫu nhiên mỗi lần (có thể cải tiến dùng theo chỉ số nếu cần)
     question_row = quiz_data.sample(n=1).iloc[0]
+
     question = question_row['Question']
     options = [question_row['Option 1'], question_row['Option 2'], question_row['Option 3']]
     correct_answer = question_row['Correct Answer']
-    explanation = question_row.iloc[-1]  # Giải thích quiz ở cột cuối cùng
+    explanation = question_row.iloc[-1]
 
     st.markdown(f"**❓ Question:** {question}")
     st.audio(generate_audio(question), format='audio/mp3')
 
-    selected = st.radio("Choose the correct answer:", options)
+    selected = st.radio("Choose the correct answer:", options, key=f"{unit_name}_radio_{st.session_state[quiz_key]}")
 
-    if selected:
+    if st.button("✅ Submit", key=f"{unit_name}_submit_{st.session_state[quiz_key]}"):
         if selected == correct_answer:
             st.success("✅ Correct!")
         else:
@@ -95,10 +99,11 @@ def display_quiz(unit_name, unit_df):
             st.markdown(f"**Explanation:** {explanation}")
             st.audio(generate_audio(explanation), format='audio/mp3')
 
-        if st.button("🔁 Next Question"):
-            display_quiz(unit_name, unit_df)
+    if st.button("🔁 Next Question", key=f"{unit_name}_next_{st.session_state[quiz_key]}"):
+        st.session_state[quiz_key] += 1
+        st.experimental_rerun()
 
-# 🚀 App chính
+# App chính
 def main():
     st.title("🧒 English Learning App for Kids")
 
