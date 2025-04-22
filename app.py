@@ -95,7 +95,11 @@ def display_quiz(unit_name, unit_df):
     explanation = question_row.iloc[-1]
 
     st.markdown(f"**❓ Question:** {question}")
-    st.audio(generate_audio(question), format='audio/mp3')
+    
+    # Phát âm câu hỏi
+    audio_file = generate_audio(question)
+    if audio_file:
+        st.audio(audio_file, format='audio/mp3')
 
     selected = st.radio("Choose the correct answer:", options, key=f"{unit_name}_radio_{st.session_state[quiz_key]}")
 
