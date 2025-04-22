@@ -7,12 +7,20 @@ from io import BytesIO
 # Đọc dữ liệu từ tất cả các sheet trong file Excel
 @st.cache_data
 def load_vocabulary_data():
-    # Đọc tất cả các sheet
+    # Đọc tất cả các sheet từ file Excel
     df = pd.read_excel('english_vocabulary.xlsx', sheet_name=None)  # sheet_name=None để đọc tất cả các sheet
     return df
 
-# Hàm để tạo câu hỏi trắc nghiệm
+# Hàm tạo câu hỏi trắc nghiệm
 def display_quiz(unit_name, unit_data):
+    # Kiểm tra các cột có trong unit_data để đảm bảo cột 'Unit' có tồn tại
+    st.write("Columns in unit_data:", unit_data.columns)
+
+    # Kiểm tra xem cột 'Unit' có tồn tại không
+    if 'Unit' not in unit_data.columns:
+        st.error("The column 'Unit' does not exist in the data. Please check your data structure.")
+        return
+
     quiz_data = unit_data[unit_data['Unit'] == unit_name]  # Lọc câu hỏi theo unit
 
     if not quiz_data.empty:
