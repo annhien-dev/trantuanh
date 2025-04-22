@@ -1,0 +1,56 @@
+[
+  {
+    "tuvung": "地位（ちい）",
+    "nghia": "địa vị, vị trí xã hội",
+    "vidu": "彼は会社で高い地位にある。",
+    "vidu_vn": "Anh ấy có địa vị cao trong công ty。",
+    "quiz": [
+      {
+        "cauhoi": "『地位』 có nghĩa là gì?",
+        "luachon": ["lời khuyên", "địa vị, vị trí xã hội", "sự giúp đỡ"],
+        "dapan": "địa vị, vị trí xã hội"
+      },
+      {
+        "cauhoi": "Câu nào dùng đúng từ 『地位』?",
+        "luachon": [
+          "彼は会社で高い地位にある。",
+          "彼は忠告を聞かなかった。",
+          "地位を敬意で払う。"
+        ],
+        "dapan": "彼は会社で高い地位にある。"
+      },
+      {
+        "cauhoi": "Điền vào chỗ trống: 彼は会社で高い（　）にある。",
+        "luachon": ["忠告", "地位", "苦痛"],
+        "dapan": "地位"
+      }
+    ]
+  },
+  {
+    "tuvung": "目上（めうえ）",
+    "nghia": "người bề trên, người có cấp bậc cao hơn",
+    "vidu": "目上の人には敬意を払うべきだ。",
+    "vidu_vn": "Cần phải tôn trọng người bề trên.",
+    "quiz": [
+      {
+        "cauhoi": "『目上』 có nghĩa là gì?",
+        "luachon": ["người bề trên", "người cùng cấp", "người dưới"],
+        "dapan": "người bề trên"
+      },
+      {
+        "cauhoi": "Câu nào dùng đúng từ 『目上』?",
+        "luachon": [
+          "目上の人には敬意を払うべきだ。",
+          "目上の人と遊ぶのが好き。",
+          "目上の人に文句を言う。"
+        ],
+        "dapan": "目上の人には敬意を払うべきだ。"
+      },
+      {
+        "cauhoi": "Điền vào chỗ trống: 目上の人には（　）を払うべきだ。",
+        "luachon": ["忠告", "敬意", "愛情"],
+        "dapan": "敬意"
+      }
+    ]
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Trường học & Giao tiếp",
+    "tuvung": "Ball",
+    "nghia": "Quả bóng",
+    "vidu": "The ball is red.",
+    "vidu_vn": "Quả bóng màu đỏ.",
+    "nguphap": "Dùng mạo từ 'the' để nói về vật cụ thể.",
+    "boi_canh": "Dùng khi mô tả đồ vật trong trò chơi hoặc trong lớp học.",
+    "vi_du_them": ["Kick the ball!", "I have a blue ball."],
+    "quiz": [
+      {
+        "cauhoi": "What is the meaning of 'Ball'?",
+        "luachon": ["Car", "Ball", "Bike"],
+        "dapan": "Ball"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: The (　) is red.",
+        "question_text": "The ball is red.",
+        "luachon": ["Ball", "Book", "School"],
+        "dapan": "Ball"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Phương tiện",
+    "tuvung": "Bike",
+    "nghia": "Xe đạp",
+    "vidu": "I can ride a bike.",
+    "vidu_vn": "Tớ có thể đi xe đạp.",
+    "nguphap": "Cấu trúc 'can + V' diễn tả khả năng.",
+    "boi_canh": "Dùng khi nói về hoạt động ngoài trời hoặc phương tiện.",
+    "vi_du_them": ["My bike is new.", "He rides his bike every day."],
+    "quiz": [
+      {
+        "cauhoi": "What is a 'Bike'?",
+        "luachon": ["Bus", "Bike", "Ball"],
+        "dapan": "Bike"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: I can ride a (　).",
+        "question_text": "I can ride a bike.",
+        "luachon": ["School", "Bike", "Book"],
+        "dapan": "Bike"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Đồ vật",
+    "tuvung": "Book",
+    "nghia": "Quyển sách",
+    "vidu": "This is my book.",
+    "vidu_vn": "Đây là sách của tớ.",
+    "nguphap": "Câu chỉ định với 'this is'.",
+    "boi_canh": "Dùng khi giới thiệu đồ vật cá nhân.",
+    "vi_du_them": ["Open the book.", "I read a book every night."],
+    "quiz": [
+      {
+        "cauhoi": "What is the meaning of 'Book'?",
+        "luachon": ["Book", "Ball", "Bike"],
+        "dapan": "Book"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: This is my (　).",
+        "question_text": "This is my book.",
+        "luachon": ["Book", "Dog", "School"],
+        "dapan": "Book"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Nơi chốn",
+    "tuvung": "School",
+    "nghia": "Trường học",
+    "vidu": "I go to school every day.",
+    "vidu_vn": "Tớ đi học mỗi ngày.",
+    "nguphap": "Thì hiện tại đơn để nói về thói quen.",
+    "boi_canh": "Dùng khi nói về lịch trình học.",
+    "vi_du_them": ["School starts at 7 AM.", "My school is big."],
+    "quiz": [
+      {
+        "cauhoi": "What is 'School'?",
+        "luachon": ["House", "Book", "School"],
+        "dapan": "School"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: I go to (　) every day.",
+        "question_text": "I go to school every day.",
+        "luachon": ["School", "Bike", "Ball"],
+        "dapan": "School"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Giao tiếp",
+    "tuvung": "Bye",
+    "nghia": "Tạm biệt",
+    "vidu": "Bye, see you tomorrow!",
+    "vidu_vn": "Tạm biệt, hẹn gặp lại ngày mai!",
+    "nguphap": "Dùng để chào tạm biệt.",
+    "boi_canh": "Dùng cuối cuộc trò chuyện.",
+    "vi_du_them": ["Bye, mom!", "Bye, teacher!"],
+    "quiz": [
+      {
+        "cauhoi": "What does 'Bye' mean?",
+        "luachon": ["Hi", "Bye", "Play"],
+        "dapan": "Bye"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: (　), see you tomorrow!",
+        "question_text": "Bye, see you tomorrow!",
+        "luachon": ["Hello", "Bye", "I"],
+        "dapan": "Bye"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Giao tiếp",
+    "tuvung": "Hi",
+    "nghia": "Chào",
+    "vidu": "Hi, how are you?",
+    "vidu_vn": "Chào, bạn khỏe không?",
+    "nguphap": "Câu chào thân mật khi gặp mặt.",
+    "boi_canh": "Dùng đầu cuộc trò chuyện.",
+    "vi_du_them": ["Hi, my name is Anna.", "Hi there!"],
+    "quiz": [
+      {
+        "cauhoi": "What is the meaning of 'Hi'?",
+        "luachon": ["Bye", "Hi", "Book"],
+        "dapan": "Hi"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: (　), how are you?",
+        "question_text": "Hi, how are you?",
+        "luachon": ["Hi", "Bye", "Ball"],
+        "dapan": "Hi"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Giao tiếp",
+    "tuvung": "Hello",
+    "nghia": "Xin chào",
+    "vidu": "Hello, my name is Tom.",
+    "vidu_vn": "Xin chào, tớ tên là Tom.",
+    "nguphap": "Câu chào trang trọng hoặc trong giới thiệu bản thân.",
+    "boi_canh": "Dùng khi bắt đầu giao tiếp hoặc gặp người mới.",
+    "vi_du_them": ["Hello, teacher!", "Hello, everyone!"],
+    "quiz": [
+      {
+        "cauhoi": "What is the meaning of 'Hello'?",
+        "luachon": ["Bye", "Hello", "I"],
+        "dapan": "Hello"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: (　), my name is Tom.",
+        "question_text": "Hello, my name is Tom.",
+        "luachon": ["Hello", "Bye", "You"],
+        "dapan": "Hello"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Ngôi xưng",
+    "tuvung": "I",
+    "nghia": "Tôi, tớ, mình",
+    "vidu": "I am happy.",
+    "vidu_vn": "Tớ rất vui.",
+    "nguphap": "Ngôi xưng chủ ngữ số ít.",
+    "boi_canh": "Dùng để nói về chính mình.",
+    "vi_du_them": ["I like apples.", "I am a student."],
+    "quiz": [
+      {
+        "cauhoi": "Who does 'I' refer to?",
+        "luachon": ["You", "They", "I"],
+        "dapan": "I"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: (　) am happy.",
+        "question_text": "I am happy.",
+        "luachon": ["I", "You", "We"],
+        "dapan": "I"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Ngôi xưng",
+    "tuvung": "You",
+    "nghia": "Bạn, các bạn",
+    "vidu": "You are my friend.",
+    "vidu_vn": "Bạn là bạn của tớ.",
+    "nguphap": "Ngôi xưng chỉ người đối diện.",
+    "boi_canh": "Dùng để nói chuyện trực tiếp với người khác.",
+    "vi_du_them": ["You are nice!", "You like soccer."],
+    "quiz": [
+      {
+        "cauhoi": "What does 'You' mean?",
+        "luachon": ["I", "They", "You"],
+        "dapan": "You"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: (　) are my friend.",
+        "question_text": "You are my friend.",
+        "luachon": ["You", "I", "He"],
+        "dapan": "You"
+      }
+    ]
+  },
+  {
+    "lop": "Lớp 1",
+    "chu_de": "Hành động",
+    "tuvung": "Play",
+    "nghia": "Chơi",
+    "vidu": "Let's play together.",
+    "vidu_vn": "Cùng chơi nhé.",
+    "nguphap": "Động từ nguyên thể chỉ hành động vui chơi.",
+    "boi_canh": "Dùng trong lớp học hoặc khi rủ chơi.",
+    "vi_du_them": ["Play with me.", "I play soccer every day."],
+    "quiz": [
+      {
+        "cauhoi": "What is the meaning of 'Play'?",
+        "luachon": ["Sleep", "Play", "Run"],
+        "dapan": "Play"
+      },
+      {
+        "cauhoi_audio": "Fill in the blank: Let's (　) together.",
+        "question_text": "Let's play together.",
+        "luachon": ["Play", "Eat", "Cry"],
+        "dapan": "Play"
+      }
+    ]
+  }
+]
