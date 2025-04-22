@@ -1,179 +1,134 @@
+import os
 import streamlit as st
 import pandas as pd
-import random
 from gtts import gTTS
-import tempfile
+from io import BytesIO
 
-# Cấu hình giao diện
-st.set_page_config(page_title="Học từ vựng", layout="centered")
+# Đọc dữ liệu từ tất cả các sheet trong file Excel
+@st.cache
+def load_vocabulary_data():
+    # Đọc tất cả các sheet
+    df = pd.read_excel('english_vocabulary.xlsx', sheet_name=None)  # sheet_name=None để đọc tất cả các sheet
+    return df
 
-# Session state
-if "history" not in st.session_state:
-    st.session_state.history = []
+# Hàm để tạo câu hỏi trắc nghiệm
+def display_quiz(unit_name, unit_data):
+    quiz_data = unit_data[unit_data['Unit'] == unit_name]  # Lọc câu hỏi theo unit
 
-if "random_word" not in st.session_state:
-    st.session_state.random_word = None
+    if not quiz_data.empty:
+        # Chọn câu hỏi ngẫu nhiên để hỏi
+        question_row = quiz_data.sample(n=1).iloc[0]
 
-if "today_words" not in st.session_state:
-    st.session_state.today_words = []
+        question = question_row['Question']
+        options = [question_row['Option 1'], question_row['Option 2'], question_row['Option 3']]
+        correct_answer = question_row['Correct Answer']
+        explanation = question_row['Explanation']
 
-# Chọn ngôn ngữ học
-lang = st.selectbox("🔤 Chọn ngôn ngữ học", ["Tiếng Anh", "Tiếng Nhật"])
+        # Hiển thị câu hỏi
+        st.subheader(f"Question: {question}")
+        st.write(f"Options:")
+        for idx, option in enumerate(options, 1):
+            st.write(f"{idx}. {option}")
+        
+        # Phát âm câu hỏi
+        st.subheader("Listen to the question:")
+        audio_file = generate_audio(question)
+        st.audio(audio_file, format='audio/mp3')
 
-# Load dữ liệu từ file Excel
-def load_data(lang):
-    filename = 'english_vocabulary.xlsx' if lang == "Tiếng Anh" else 'japanese_vocabulary.xlsx'
-    # Đọc file Excel
-    data = pd.read_excel(filename, sheet_name=None)  # sheet_name=None để đọc tất cả các sheet
-    return data
+        # Chọn đáp án
+        selected_option = st.radio("Choose your answer:", options)
 
-data = load_data(lang)
-
-# Lấy danh sách cấp độ (sheet names)
-levels = list(data.keys())
-
-# Chọn cấp độ học
-level = st.selectbox("Chọn cấp độ học", levels)
-
-# Lấy dữ liệu từ sheet của cấp độ
-level_data = data[level]
-
-# Chọn chế độ học
-st.markdown("## ✨ Chọn chế độ học từ vựng")
-mode = st.radio("Chế độ học", ["🔍 Chọn từ thủ công", "🔁 Học từ ngẫu nhiên", "📅 Học 5 từ hôm nay"])
-
-# Xử lý lựa chọn
-word_list = level_data['Word'].tolist()
-
-if mode == "🔁 Học từ ngẫu nhiên":
-    if st.button("🎲 Lấy từ ngẫu nhiên"):
-        st.session_state.random_word = random.choice(word_list)
-    selected_word = st.session_state.random_word or word_list[0]
-
-elif mode == "📅 Học 5 từ hôm nay":
-    if not st.session_state.today_words:
-        st.session_state.today_words = random.sample(word_list, min(5, len(word_list)))
-    selected_word = st.selectbox("📆 Hôm nay bạn học:", st.session_state.today_words)
-
-else:
-    st.markdown("### 📚 Tìm & chọn từ vựng")
-    search_keyword = st.text_input("🔎 Nhập từ khóa để tìm từ vựng")
-    filtered_words = [w for w in word_list if search_keyword.lower() in w.lower()] if search_keyword else word_list
-    if not filtered_words:
-        st.warning("😕 Không tìm thấy từ nào phù hợp.")
-        st.stop()
-    selected_word = st.selectbox("📘 Chọn từ:", filtered_words)
-
-# Ghi lịch sử học
-if selected_word and selected_word not in st.session_state.history:
-    st.session_state.history.append(selected_word)
-
-# Lấy dữ liệu từ đã chọn
-word_row = level_data[level_data['Word'] == selected_word].iloc[0]
-
-# Hiển thị thông tin từ vựng
-st.title(f"📘 Học từ: {word_row['Word']}")
-st.write(f"**Nghĩa:** {word_row['Meaning']}")
-st.write(f"**Ví dụ:** {word_row['Example']}")
-st.caption(f"{word_row['Example_Vn']}")
-
-# Giải thích ngữ pháp
-st.markdown("📚 **Giải thích ngữ pháp:**")
-st.info(word_row.get("Grammar", "Chưa có thông tin ngữ pháp cho từ này."))
-
-# Ngôn ngữ phát âm
-tts_lang = 'ja' if lang == "Tiếng Nhật" else 'en'
-
-# Phát âm từ
-tts = gTTS(word_row["Word"], lang=tts_lang)
-with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
-    tts.save(fp.name)
-    st.audio(fp.name, format='audio/mp3', start_time=0)
-
-# Phát âm ví dụ
-tts_sentence = gTTS(word_row["Example"], lang=tts_lang)
-with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp2:
-    tts_sentence.save(fp2.name)
-    st.audio(fp2.name, format='audio/mp3', start_time=0)
-
-# Trắc nghiệm - Ẩn mặc định câu hỏi
-st.markdown("---")
-st.subheader("📝 Trắc nghiệm_Nhím ơi cố gắng lên nhé !!!")
-
-# Tạo một button để hiển thị câu hỏi trắc nghiệm
-show_quiz = st.button("📚 Hiển thị câu hỏi trắc nghiệm")
-
-# Lấy câu hỏi trắc nghiệm và phát âm câu hỏi
-if isinstance(word_row['Quiz'], str):
-    quiz_data = eval(word_row['Quiz'])  # Đảm bảo 'Quiz' là danh sách của câu hỏi
-else:
-    quiz_data = word_row['Quiz']
-
-for idx, q in enumerate(quiz_data):
-    # Phát âm câu hỏi trắc nghiệm
-    tts_question = gTTS(q['question'], lang=tts_lang)
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp3:
-        tts_question.save(fp3.name)
-        st.audio(fp3.name, format='audio/mp3', start_time=0)
-
-    # Nếu nhấn nút "Hiển thị câu hỏi", hiển thị câu hỏi
-    if show_quiz:
-        st.write(f"**Câu {idx + 1}:** {q['question']}")
-    
-    # Hiển thị đáp án và cho phép người dùng chọn
-    st.write(f"**Lựa chọn đáp án:**")
-    ans = st.radio("Chọn đáp án", q['options'], key=f"q{idx}")
-
-    # Kiểm tra khi người dùng chọn đáp án
-    if st.button(f"Kiểm tra câu {idx + 1}", key=f"btn{idx}"):
-        if ans == q["correct_answer"]:
-            st.success("✅ Chính xác!")
-        else:
-            st.error(f"❌ Sai rồi. Đáp án đúng là: {q['correct_answer']}")
-
-    st.markdown("---")
-
-# Bài đọc hiểu - Ẩn mặc định
-st.markdown("📖 **Bài đọc hiểu**")
-
-# Tạo một button để hiển thị phần bài đọc hiểu
-show_reading = st.button("📖 Hiển thị đoạn văn đọc hiểu")
-
-# Hiển thị đoạn văn đọc hiểu khi người dùng nhấn nút
-if show_reading:
-    reading_text = word_row["Reading_Text"]
-    reading_questions = eval(word_row["Reading_Questions"])
-
-    st.write(f"Đoạn văn đọc hiểu_Nhím ơi cố gắng lên nhé !!!: {reading_text}")
-
-    # Phát âm đoạn văn đọc hiểu
-    tts_reading = gTTS(reading_text, lang=tts_lang)
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp4:
-        tts_reading.save(fp4.name)
-        st.audio(fp4.name, format='audio/mp3', start_time=0)
-
-    # Hiển thị câu hỏi bài đọc hiểu sau khi nhấn nút
-    for idx, q in enumerate(reading_questions):
-        # Phát âm câu hỏi đọc hiểu
-        tts_reading_question = gTTS(q['question'], lang=tts_lang)
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp5:
-            tts_reading_question.save(fp5.name)
-            st.audio(fp5.name, format='audio/mp3', start_time=0)
-
-        # Hiển thị đáp án và cho phép người dùng chọn
-        st.write(f"**Câu hỏi {idx + 1}:**")
-        ans = st.radio("Chọn đáp án", q['options'], key=f"reading_q{idx}")
-
-        # Kiểm tra khi người dùng chọn đáp án
-        if st.button(f"Kiểm tra câu {idx + 1}", key=f"reading_btn{idx}"):
-            if ans == q["correct_answer"]:
-                st.success("✅ Chính xác!")
+        # Nếu đã chọn, kiểm tra câu trả lời
+        if selected_option:
+            if selected_option == correct_answer:
+                st.success("Correct!")
             else:
-                st.error(f"❌ Sai rồi. Đáp án đúng là: {q['correct_answer']}")
-        st.markdown("---")
+                st.error("Incorrect!")
+            
+            st.write(f"Explanation: {explanation}")
+            
+            # Phát âm giải thích
+            st.subheader("Listen to the explanation:")
+            audio_file = generate_audio(explanation)
+            st.audio(audio_file, format='audio/mp3')
 
-# Lịch sử học
-with st.expander("📜 Lịch sử từ đã học (trong phiên)"):
+            # Đưa ra một câu hỏi mới nếu muốn
+            if st.button("Next Question"):
+                display_quiz(unit_name, unit_data)
+    else:
+        st.error(f"No quiz data found for unit {unit_name}.")
 
-    for i, word_h in enumerate(st.session_state.history, 1):
-        st.write(f"{i}. {word_h}")
+# Hiển thị bài đọc và từ vựng liên quan
+def display_unit(unit_name, unit_data):
+    unit_data_filtered = unit_data[unit_data['Unit'] == unit_name]
+
+    if not unit_data_filtered.empty:
+        # Hiển thị bài đọc dài
+        st.title(f"Unit: {unit_name}")
+        reading_text = unit_data_filtered['Reading Text'].iloc[0]  # Lấy đoạn văn dài của unit
+        if pd.notna(reading_text):
+            st.subheader("Reading Text:")
+            st.write(reading_text)  # Hiển thị đoạn văn bản
+
+            # Phát âm bài đọc
+            st.subheader("Listen to the reading:")
+            audio_file = generate_audio(reading_text)  # Phát âm bài đọc qua gTTS
+            st.audio(audio_file, format='audio/mp3')
+
+            st.write("---")
+        
+        # Hiển thị danh sách từ vựng và phát âm qua TTS
+        st.subheader("Vocabulary:")
+        for index, row in unit_data_filtered.iterrows():
+            if pd.isna(row['Question']):  # Chỉ hiển thị từ vựng, không hiển thị câu hỏi
+                st.write(f"**{row['Vocabulary']}** ({row['IPA']})")
+                st.write(f"**Example**: {row['Example']}")
+                st.write(f"**Explanation**: {row['Explanation']}")
+                st.write(f"**Note**: {row['Note']}")  # Hiển thị phần ghi chú
+
+                # Phát âm từ vựng qua gTTS
+                st.subheader(f"Listen to the pronunciation of '{row['Vocabulary']}':")
+                audio_file = generate_audio(row['Vocabulary'])  # Phát âm từ vựng
+                st.audio(audio_file, format='audio/mp3')
+                
+                st.subheader(f"Listen to the example sentence:")
+                audio_file = generate_audio(row['Example'])  # Phát âm câu ví dụ
+                st.audio(audio_file, format='audio/mp3')
+                
+                st.write("---")
+    else:
+        st.error(f"Unit {unit_name} not found!")
+
+# Tạo file âm thanh từ văn bản và phát âm
+def generate_audio(text):
+    tts = gTTS(text=text, lang='en')
+    audio_file = BytesIO()
+    tts.save(audio_file)
+    audio_file.seek(0)
+    return audio_file
+
+# Chạy ứng dụng Streamlit
+def main():
+    st.title("English Learning App for Kids")
+    
+    # Đọc dữ liệu từ tất cả các sheet trong file Excel
+    unit_data = load_vocabulary_data()
+
+    # Hiển thị danh sách các unit (tên sheet)
+    units = unit_data.keys()  # Lấy danh sách các sheet (unit)
+    selected_unit = st.sidebar.selectbox("Choose a Unit", units)
+    
+    # Hiển thị bài đọc và các từ vựng của unit được chọn
+    display_unit(selected_unit, unit_data[selected_unit])
+    
+    # Hiển thị câu hỏi trắc nghiệm của unit được chọn
+    display_quiz(selected_unit, unit_data[selected_unit])
+    
+    # Tạo và phát âm từ vựng hoặc câu ví dụ khi người dùng yêu cầu
+    text_to_speak = st.text_input("Enter text to hear pronunciation")
+    if text_to_speak:
+        audio_file = generate_audio(text_to_speak)
+        st.audio(audio_file, format="audio/mp3")
+
+if __name__ == "__main__":
+    main()
