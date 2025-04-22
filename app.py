@@ -12,11 +12,21 @@ def load_vocabulary_data():
 
 # Tạo file âm thanh từ văn bản
 def generate_audio(text):
-    tts = gTTS(text=text, lang='en')
-    audio_file = BytesIO()
-    tts.save(audio_file)
-    audio_file.seek(0)
-    return audio_file
+    try:
+        if not text or not isinstance(text, str) or text.strip() == "":
+            return None
+
+        # Loại bỏ ký tự lạ có thể gây lỗi
+        clean_text = text.replace("“", '"').replace("”", '"').replace("‘", "'").replace("’", "'").strip()
+
+        tts = gTTS(text=clean_text, lang='en')
+        audio_file = BytesIO()
+        tts.save(audio_file)
+        audio_file.seek(0)
+        return audio_file
+    except Exception as e:
+        st.warning(f"⚠️ Could not generate audio: {e}")
+        return None
 
 # Hiển thị bài đọc và từ vựng
 def display_unit(unit_name, unit_data):
@@ -33,7 +43,7 @@ def display_unit(unit_name, unit_data):
             st.subheader("📖 Reading Text:")
             st.write(reading_text)
 
-            # Phát audio từ file nếu có
+            # Phát âm từ file nếu có
             st.subheader("🔊 Listen to the reading:")
             audio_path = f"audio/{unit_name}.mp3"
             if os.path.exists(audio_path):
@@ -76,7 +86,7 @@ def display_quiz(unit_name, unit_df):
     if quiz_key not in st.session_state:
         st.session_state[quiz_key] = 0
 
-    # Lấy 1 câu hỏi ngẫu nhiên mỗi lần (có thể cải tiến dùng theo chỉ số nếu cần)
+    # Lấy 1 câu hỏi ngẫu nhiên mỗi lần
     question_row = quiz_data.sample(n=1).iloc[0]
 
     question = question_row['Question']
