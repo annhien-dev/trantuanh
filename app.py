@@ -50,7 +50,9 @@ def display_unit(unit_name, unit_data):
                 st.audio(audio_path, format='audio/mp3')
             else:
                 st.warning("⚠️ Audio file not found. Using TTS instead.")
-                st.audio(generate_audio(reading_text), format='audio/mp3')
+                audio_file = generate_audio(reading_text)
+                if audio_file:
+                    st.audio(audio_file, format='audio/mp3')
 
             st.write("---")
 
@@ -63,10 +65,14 @@ def display_unit(unit_name, unit_data):
                 st.write(f"**Note**: {row['Note']}")
 
                 st.markdown("🔊 **Pronunciation:**")
-                st.audio(generate_audio(row['Vocabulary']), format='audio/mp3')
+                audio_file = generate_audio(row['Vocabulary'])
+                if audio_file:
+                    st.audio(audio_file, format='audio/mp3')
 
                 st.markdown("🔊 **Example Audio:**")
-                st.audio(generate_audio(row['Example']), format='audio/mp3')
+                audio_file = generate_audio(row['Example'])
+                if audio_file:
+                    st.audio(audio_file, format='audio/mp3')
 
                 st.write("---")
     else:
@@ -111,7 +117,9 @@ def display_quiz(unit_name, unit_df):
 
         if pd.notna(explanation):
             st.markdown(f"**Explanation:** {explanation}")
-            st.audio(generate_audio(explanation), format='audio/mp3')
+            explanation_audio = generate_audio(explanation)
+            if explanation_audio:
+                st.audio(explanation_audio, format='audio/mp3')
 
     if st.button("🔁 Next Question", key=f"{unit_name}_next_{st.session_state[quiz_key]}"):
         st.session_state[quiz_key] += 1
@@ -132,7 +140,9 @@ def main():
     st.markdown("---")
     text_to_speak = st.text_input("🔊 Enter any text to hear it spoken aloud:")
     if text_to_speak:
-        st.audio(generate_audio(text_to_speak), format="audio/mp3")
+        audio_file = generate_audio(text_to_speak)
+        if audio_file:
+            st.audio(audio_file, format="audio/mp3")
 
 if __name__ == "__main__":
     main()
